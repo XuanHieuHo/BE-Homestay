@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	cors "github.com/rs/cors/wrapper/gin"
 )
 
 type Server struct {
@@ -35,11 +34,28 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 	return server, nil
 }
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func (server *Server) setupRouter() {
 	router := gin.Default()
-	router.Use(cors.Default())
+	router.Use(CORSMiddleware())
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	
+
 	api := router.Group("/api")
 
 	// login and register
@@ -113,7 +129,7 @@ func (server *Server) setupRouter() {
 	authStaffRoutes.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	// booking
 	authStaffRoutes.PUT("/users/:username/bookings/:homestay_booking/:booking_id/checkout", server.checkoutBooking)
-	
+
 	server.router = router
 }
 
