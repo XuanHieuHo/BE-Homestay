@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 type Server struct {
@@ -36,7 +37,9 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 
 func (server *Server) setupRouter() {
 	router := gin.Default()
+	router.Use(cors.Default())
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	
 	api := router.Group("/api")
 
 	// login and register
