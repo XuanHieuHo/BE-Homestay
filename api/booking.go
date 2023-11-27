@@ -315,3 +315,92 @@ func (server *Server) userGetListBooking(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result)
 }
+
+// @Summary Admin Get List Booking Validated
+// @ID adminGetListBookingValidated
+// @Produce json
+// @Accept json
+// @Tags Admin
+// @Security bearerAuth
+// @Success 200 {object} listBookingResponse
+// @Failure 400 {string} error
+// @Failure 401 {string} error
+// @Failure 404 {string} error
+// @Failure 500 {string} error
+// @Router /api/admin/list_booking_validated/ [get]
+func (server *Server) adminGetListBookingValidated(ctx *gin.Context) {
+	var result listBookingResponse
+
+	bookings, err := server.store.AdminListBooking(ctx, "validated")
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	for _, booking := range bookings {
+
+		user, err := server.store.GetUser(ctx, booking.UserBooking)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+		userResult := newUserResponse(user)
+
+		payment, err := server.store.GetPaymentByBookingID(ctx, booking.BookingID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		promotion, err := server.store.GetPromotion(ctx, booking.PromotionID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		homestay, err := server.store.GetHomestay(ctx, booking.HomestayBooking)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+			return
+		}
+
+		duration := booking.CheckoutDate.Sub(booking.CheckinDate)
+		numofday := int32(duration.Hours() / 24)
+		homestayfee := float64(numofday) * homestay.Price
+
+		var surchargeCapacity float64
+		var amount float64
+		if booking.NumberOfGuest > homestay.Capacity {
+			surchargeCapacity = float64(booking.NumberOfGuest-homestay.Capacity) * 10
+			amount = (surchargeCapacity + homestayfee + booking.ServiceFee)
+		} else {
+			surchargeCapacity = 0
+			amount = homestayfee + booking.ServiceFee
+		}
+
+		tax := booking.Tax * amount
+
+		detail := db.DetailPayment{
+			UserBooking:       booking.UserBooking,
+			HomestayBooking:   booking.HomestayBooking,
+			CheckinDate:       booking.CheckinDate.String(),
+			Discount:          promotion.DiscountPercent,
+			NumberOfDay:       numofday,
+			NumberOfGuest:     booking.NumberOfGuest,
+			Tax:               tax,
+			ServiceFee:        booking.ServiceFee,
+			SurchargeCapacity: surchargeCapacity,
+			HomestayFee:       homestayfee,
+			TotalAmount:       payment.Amount,
+		}
+
+		result.ListBooking = append(result.ListBooking, struct {
+			Booking         db.Booking       `json:"booking"`
+			UserBooking     userResponse     `json:"user_booking"`
+			HomestayBooking db.Homestay      `json:"homestay_booking"`
+			Payment         db.Payment       `json:"payment"`
+			DetailPayment   db.DetailPayment `json:"detail_payment"`
+		}{booking, userResult, homestay, payment, detail})
+	}
+	ctx.JSON(http.StatusOK, result)
+}

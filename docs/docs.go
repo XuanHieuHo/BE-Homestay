@@ -294,6 +294,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/admin/list_booking_validated/": {
+            "get": {
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin"
+                ],
+                "summary": "Admin Get List Booking Validated",
+                "operationId": "adminGetListBookingValidated",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/api.listBookingResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/admin/payments/unpaid": {
             "get": {
                 "security": [
@@ -2575,8 +2627,20 @@ const docTemplate = `{
                     "items": {
                         "type": "object",
                         "properties": {
+                            "booking": {
+                                "$ref": "#/definitions/db.Booking"
+                            },
                             "detail_payment": {
                                 "$ref": "#/definitions/db.DetailPayment"
+                            },
+                            "homestay_booking": {
+                                "$ref": "#/definitions/db.Homestay"
+                            },
+                            "payment": {
+                                "$ref": "#/definitions/db.Payment"
+                            },
+                            "user_booking": {
+                                "$ref": "#/definitions/api.userResponse"
                             }
                         }
                     }
@@ -2888,7 +2952,7 @@ const docTemplate = `{
                     "$ref": "#/definitions/db.Payment"
                 },
                 "user_booking": {
-                    "$ref": "#/definitions/db.User"
+                    "$ref": "#/definitions/db.userResponse"
                 }
             }
         },
@@ -3068,6 +3132,29 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "rspassword_token_expired_at": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "db.userResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "password_changed_at": {
+                    "type": "string"
+                },
+                "phone": {
                     "type": "string"
                 },
                 "username": {

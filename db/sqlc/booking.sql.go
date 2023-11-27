@@ -10,6 +10,47 @@ import (
 	"time"
 )
 
+const adminListBooking = `-- name: AdminListBooking :many
+SELECT booking_id, user_booking, homestay_booking, promotion_id, status, booking_date, checkin_date, checkout_date, number_of_guest, service_fee, tax FROM bookings
+WHERE status = $1
+ORDER BY booking_id
+`
+
+func (q *Queries) AdminListBooking(ctx context.Context, status string) ([]Booking, error) {
+	rows, err := q.db.QueryContext(ctx, adminListBooking, status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Booking{}
+	for rows.Next() {
+		var i Booking
+		if err := rows.Scan(
+			&i.BookingID,
+			&i.UserBooking,
+			&i.HomestayBooking,
+			&i.PromotionID,
+			&i.Status,
+			&i.BookingDate,
+			&i.CheckinDate,
+			&i.CheckoutDate,
+			&i.NumberOfGuest,
+			&i.ServiceFee,
+			&i.Tax,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const createBooking = `-- name: CreateBooking :one
 INSERT INTO bookings (
   booking_id,

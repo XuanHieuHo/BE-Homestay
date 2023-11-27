@@ -13,7 +13,7 @@ import (
 type Store interface {
 	Querier
 	BookingTx(ctx context.Context, arg BookingTxParams) (BookingTxResult, error)
-	CancelBookingTx(ctx context.Context, arg CancelBookingParams) (string, error)
+		CancelBookingTx(ctx context.Context, arg CancelBookingParams) (string, error)
 	CheckoutTx(ctx context.Context, arg CheckoutParams) (string, error)
 }
 

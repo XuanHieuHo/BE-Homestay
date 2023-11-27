@@ -11,6 +11,7 @@ import (
 )
 
 type Querier interface {
+	AdminListBooking(ctx context.Context, status string) ([]Booking, error)
 	ChangeUserPassword(ctx context.Context, arg ChangeUserPasswordParams) (User, error)
 	CreateBooking(ctx context.Context, arg CreateBookingParams) (Booking, error)
 	CreateFeedback(ctx context.Context, arg CreateFeedbackParams) (Feedback, error)

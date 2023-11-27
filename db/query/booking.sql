@@ -38,6 +38,11 @@ ORDER BY booking_id
 LIMIT $2
 OFFSET $3;
 
+-- name: AdminListBooking :many
+SELECT * FROM bookings
+WHERE status = $1
+ORDER BY booking_id;
+
 -- name: ListBookingByHomestay :many
 SELECT * FROM bookings
 WHERE homestay_booking = $1

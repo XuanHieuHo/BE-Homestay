@@ -118,6 +118,7 @@ func (server *Server) setupRouter() {
 	authAdminRoutes.DELETE("/users/:username/feedbacks/:homestay_commented/:id", server.adminDeleteFeedback)
 	// booking
 	authAdminRoutes.PUT("/users/:username/bookings/:homestay_booking/:booking_id/checkout", server.checkoutBooking)
+	authAdminRoutes.GET("/list_booking_validated", server.adminGetListBookingValidated)
 	// payment
 	authAdminRoutes.GET("/users/:username/payment/:booking_id", server.adminGetPaymentByBookingID)
 	authAdminRoutes.GET("/payments/unpaid", server.adminListPaymentUnpaid)
