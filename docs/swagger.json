@@ -7,7 +7,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/admin/confirmed_booking": {
+        "/api/admin/confirmed_booking/{booking_id}": {
             "put": {
                 "security": [
                     {

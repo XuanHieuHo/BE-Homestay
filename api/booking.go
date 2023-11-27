@@ -509,7 +509,7 @@ type getBookingRequest struct {
 // @Failure 401 {string} error
 // @Failure 404 {string} error
 // @Failure 500 {string} error
-// @Router /api/admin/confirmed_booking [put]
+// @Router /api/admin/confirmed_booking/{booking_id} [put]
 func (server *Server) adminConfirmedBooking(ctx *gin.Context) {
 	var result listBookingResponse
 	var req getBookingRequest

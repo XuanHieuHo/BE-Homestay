@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/admin/confirmed_booking": {
+        "/api/admin/confirmed_booking/{booking_id}": {
             "put": {
                 "security": [
                     {
