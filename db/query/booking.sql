@@ -56,6 +56,12 @@ SET status = $2, checkout_date = $3, checkin_date = $4
 WHERE booking_id = $1
 RETURNING *;
 
+-- name: UpdateBookingStatus :one
+UPDATE bookings
+SET status = $2
+WHERE booking_id = $1
+RETURNING *;
+
 -- name: FinishBooking :one
 UPDATE bookings
 SET status = $2

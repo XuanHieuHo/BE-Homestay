@@ -489,6 +489,45 @@ info:
   title: Service API
   version: "1.0"
 paths:
+  /api/admin/confirmed_booking:
+    put:
+      consumes:
+      - application/json
+      operationId: adminConfirmedBooking
+      parameters:
+      - description: BookingID
+        in: path
+        name: booking_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.listBookingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Admin Confirmed Booking
+      tags:
+      - Admin
   /api/admin/homestayStatus/{id}:
     put:
       consumes:
@@ -663,6 +702,39 @@ paths:
       security:
       - bearerAuth: []
       summary: Admin Get Income Yearly
+      tags:
+      - Admin
+  /api/admin/list_booking_confirmed/:
+    get:
+      consumes:
+      - application/json
+      operationId: adminGetListBookingConfirmed
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.listBookingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - bearerAuth: []
+      summary: Admin Get List Booking Confirmed
       tags:
       - Admin
   /api/admin/list_booking_validated/:

@@ -119,6 +119,9 @@ func (server *Server) setupRouter() {
 	// booking
 	authAdminRoutes.PUT("/users/:username/bookings/:homestay_booking/:booking_id/checkout", server.checkoutBooking)
 	authAdminRoutes.GET("/list_booking_validated", server.adminGetListBookingValidated)
+	authAdminRoutes.GET("/list_booking_confirmed", server.adminGetListBookingConfirmed)
+	authAdminRoutes.PUT("/confirmed_booking", server.adminConfirmedBooking)
+	
 	// payment
 	authAdminRoutes.GET("/users/:username/payment/:booking_id", server.adminGetPaymentByBookingID)
 	authAdminRoutes.GET("/payments/unpaid", server.adminListPaymentUnpaid)

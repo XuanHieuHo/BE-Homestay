@@ -366,3 +366,34 @@ func (q *Queries) UpdateBooking(ctx context.Context, arg UpdateBookingParams) (B
 	)
 	return i, err
 }
+
+const updateBookingStatus = `-- name: UpdateBookingStatus :one
+UPDATE bookings
+SET status = $2
+WHERE booking_id = $1
+RETURNING booking_id, user_booking, homestay_booking, promotion_id, status, booking_date, checkin_date, checkout_date, number_of_guest, service_fee, tax
+`
+
+type UpdateBookingStatusParams struct {
+	BookingID string `json:"booking_id"`
+	Status    string `json:"status"`
+}
+
+func (q *Queries) UpdateBookingStatus(ctx context.Context, arg UpdateBookingStatusParams) (Booking, error) {
+	row := q.db.QueryRowContext(ctx, updateBookingStatus, arg.BookingID, arg.Status)
+	var i Booking
+	err := row.Scan(
+		&i.BookingID,
+		&i.UserBooking,
+		&i.HomestayBooking,
+		&i.PromotionID,
+		&i.Status,
+		&i.BookingDate,
+		&i.CheckinDate,
+		&i.CheckoutDate,
+		&i.NumberOfGuest,
+		&i.ServiceFee,
+		&i.Tax,
+	)
+	return i, err
+}

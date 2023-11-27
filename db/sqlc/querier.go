@@ -48,6 +48,7 @@ type Querier interface {
 	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
 	TotalIncome(ctx context.Context, arg TotalIncomeParams) (float64, error)
 	UpdateBooking(ctx context.Context, arg UpdateBookingParams) (Booking, error)
+	UpdateBookingStatus(ctx context.Context, arg UpdateBookingStatusParams) (Booking, error)
 	UpdateFeedback(ctx context.Context, arg UpdateFeedbackParams) (Feedback, error)
 	UpdateHomestayInfo(ctx context.Context, arg UpdateHomestayInfoParams) (Homestay, error)
 	UpdateHomestayStatus(ctx context.Context, arg UpdateHomestayStatusParams) (Homestay, error)
