@@ -1,5 +1,5 @@
 DB_URL1=postgresql://root:secret@localhost:5432/homestay?sslmode=disable
-DB_URL=postgres://root:ydA2YStpeRACnYHPAd36GbVb8fPtBBPc@dpg-cjo4f2j58phs738ak3rg-a.oregon-postgres.render.com/homestay_8csu
+DB_URL=postgres://root:pCooAXRYOOtkv2XaT0lb1nQrCcep4YKZ@dpg-cljia8ug1b2c73apvi5g-a.oregon-postgres.render.com/homestay_tzis
 postgres:
 	docker run --name postgres12 -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:15-alpine
 
